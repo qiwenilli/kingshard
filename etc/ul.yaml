@@ -1,0 +1,12 @@
+-
+    user : ydy
+    pwd : 111111
+    type : fh_read 
+    extime : 12345
+    extime_str : 222
+- 
+    user : ydy
+    pwd : 1111
+    type : ds_read 
+    extime : 111222
+    extime_str : 222
