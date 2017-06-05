@@ -1,10 +1,10 @@
 #!/bin/bash
 
 export VTTOP=$(pwd)
-export VTROOT="${VTROOT:-${VTTOP/\/src\/github.com\/flike\/kingshard/}}"
+export VTROOT="${VTROOT:-${VTTOP/\/src\/github.com\/qiwenilli\/kingshard/}}"
 # VTTOP sanity check
-if [[ "$VTTOP" == "${VTTOP/\/src\/github.com\/flike\/kingshard/}" ]]; then
-  echo "WARNING: VTTOP($VTTOP) does not contain src/github.com/flike/kingshard"
+if [[ "$VTTOP" == "${VTTOP/\/src\/github.com\/qiwenilli\/kingshard/}" ]]; then
+  echo "WARNING: VTTOP($VTTOP) does not contain src/github.com/qiwenilli/kingshard"
 fi
 
 export GOTOP=$VTTOP
