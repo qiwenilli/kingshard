@@ -179,57 +179,6 @@ func (c *ClientConn) writeResultset(status uint16, r *mysql.Resultset) error {
 		//开始过滤数据表中，敏感数据
 		//手机号、姓名、身份证、银行卡号
 		for i, f := range r.Fields {
-			if (string(f.Table) == "admin_user" && string(f.Name) == "mobile") ||
-				(string(f.Table) == "fh_user" && string(f.Name) == "u_mobile") ||
-				(string(f.Table) == "fh_borrower_user" && string(f.Name) == "b_mobile") ||
-				(string(f.Table) == "fh_warrant_user" && string(f.Name) == "mobile") ||
-				(string(f.Table) == "fh_business_user" && string(f.Name) == "bu_mobile") ||
-				(string(f.Table) == "fh_black_user" && string(f.Name) == "b_mobile") ||
-				(string(f.Table) == "fh_bind_card_record" && string(f.Name) == "mobile") ||
-				(string(f.Table) == "fh_order_customer_info" &&
-					(string(f.Name) == "mobile" ||
-						string(f.Name) == "link_mobile" ||
-						string(f.Name) == "link2_mobile" ||
-						string(f.Name) == "emergency_mobile" ||
-						string(f.Name) == "link2_mate_mobile")) ||
-				(string(f.Table) == "customer_verification" &&
-					(string(f.Name) == "mobile" ||
-						string(f.Name) == "emergency_mobile" ||
-						string(f.Name) == "link2_mobile" ||
-						string(f.Name) == "link_mobile" ||
-						string(f.Name) == "link2_mate_mobile")) {
-				//
-				//fmt.Printf("%s.%s 过滤手机号 %s \n", string(f.Table), string(f.Name), _rowData[i])
-				//
-				v = append(v[0:3], []byte(ydyimportant.Mobile(_rowData[i].(string)))...)
-			}
-			if (string(f.Table) == "admin_user" && string(f.Name) == "id_card") ||
-				(string(f.Table) == "fh_user" && string(f.Name) == "id_card") ||
-				(string(f.Table) == "fh_borrower_user" && string(f.Name) == "b_id_card") ||
-				(string(f.Table) == "fh_black_user" && string(f.Name) == "b_id_card") ||
-				(string(f.Table) == "fh_bind_card_record" && string(f.Name) == "id_card") ||
-				(string(f.Table) == "fh_order_customer_info" &&
-					(string(f.Name) == "id_card" ||
-						string(f.Name) == "link_id_card" ||
-						string(f.Name) == "link2_id_card" ||
-						string(f.Name) == "link2_mate_id_card")) {
-				//
-				//fmt.Printf("%s.%s 身份证 %s \n", string(f.Table), string(f.Name), _rowData[i])
-				//
-				v = append(v[0:3], []byte(ydyimportant.IdCard(_rowData[i].(string)))...)
-			}
-			if (string(f.Table) == "admin_user" && (string(f.Name) == "bank_card_one" || string(f.Name) == "bank_card_two")) ||
-				(string(f.Table) == "fh_user" && string(f.Name) == "bank_card") ||
-				(string(f.Table) == "fh_borrower_user" && string(f.Name) == "b_bank_card") ||
-				(string(f.Table) == "fh_black_user" && string(f.Name) == "b_bank_card") ||
-				(string(f.Table) == "fh_bind_card_record" && string(f.Name) == "bank_card") ||
-				(string(f.Table) == "fh_order_customer_info" && string(f.Name) == "bank_card_id") {
-				//
-				//fmt.Printf("%s.%s 银行卡 %s \n", string(f.Table), string(f.Name), _rowData[i])
-				//
-				v = append(v[0:3], []byte(ydyimportant.IdCard(_rowData[i].(string)))...)
-			}
-
 		}
 
 		data = data[0:4]
