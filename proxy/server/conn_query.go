@@ -55,7 +55,10 @@ func (c *ClientConn) handleQuery(sql string) (err error) {
     //
 	sql = strings.TrimRight(sql, ";") //删除sql语句最后的分号
     //
-    sql = ydySqlParser.BuildNewSql(sql)
+    sql,_ = ydySqlParser.BuildNewSql(sql)
+
+    fmt.Println("要执行的", sql)
+
     //
 	hasHandled, err := c.preHandleShard(sql)
 	if err != nil {
@@ -69,47 +72,47 @@ func (c *ClientConn) handleQuery(sql string) (err error) {
 		return nil
 	}
 
-	// var stmt sqlparser.Statement
-	// stmt, err = sqlparser.Parse(sql) //解析sql语句,得到的stmt是一个interface
-	// if err != nil {
-	// 	golog.Error("server", "parse", err.Error(), 0, "hasHandled", hasHandled, "sql", sql)
-	// 	return err
-	// }
-    //
-    // fmt.Println(stmt)
-    //
-	// switch v := stmt.(type) {
-	// case *sqlparser.Select:
-	// 	return c.handleSelect(v, nil)
-	// case *sqlparser.Insert:
-	// 	return c.handleExec(stmt, nil)
-	// case *sqlparser.Update:
-	// 	return c.handleExec(stmt, nil)
-	// case *sqlparser.Delete:
-	// 	return c.handleExec(stmt, nil)
-	// case *sqlparser.Replace:
-	// 	return c.handleExec(stmt, nil)
-	// case *sqlparser.Set:
-	// 	return c.handleSet(v, sql)
-	// case *sqlparser.Begin:
-	// 	return c.handleBegin()
-	// case *sqlparser.Commit:
-	// 	return c.handleCommit()
-	// case *sqlparser.Rollback:
-	// 	return c.handleRollback()
-	// case *sqlparser.Admin:
-	// 	return c.handleAdmin(v)
-	// case *sqlparser.AdminHelp:
-	// 	return c.handleAdminHelp(v)
-	// case *sqlparser.UseDB:
-	// 	return c.handleUseDB(v.DB)
-	// case *sqlparser.SimpleSelect:
-	// 	return c.handleSimpleSelect(v)
-	// case *sqlparser.Truncate:
-	// 	return c.handleExec(stmt, nil)
-	// default:
-	// 	return fmt.Errorf("statement %T not support now", stmt)
-	// }
+	var stmt sqlparser.Statement
+	stmt, err = sqlparser.Parse(sql) //解析sql语句,得到的stmt是一个interface
+	if err != nil {
+		golog.Error("server", "parse", err.Error(), 0, "hasHandled", hasHandled, "sql", sql)
+		return err
+	}
+
+    fmt.Println(stmt)
+
+	switch v := stmt.(type) {
+	case *sqlparser.Select:
+		return c.handleSelect(v, nil)
+	case *sqlparser.Insert:
+		return c.handleExec(stmt, nil)
+	case *sqlparser.Update:
+		return c.handleExec(stmt, nil)
+	case *sqlparser.Delete:
+		return c.handleExec(stmt, nil)
+	case *sqlparser.Replace:
+		return c.handleExec(stmt, nil)
+	case *sqlparser.Set:
+		return c.handleSet(v, sql)
+	case *sqlparser.Begin:
+		return c.handleBegin()
+	case *sqlparser.Commit:
+		return c.handleCommit()
+	case *sqlparser.Rollback:
+		return c.handleRollback()
+	case *sqlparser.Admin:
+		return c.handleAdmin(v)
+	case *sqlparser.AdminHelp:
+		return c.handleAdminHelp(v)
+	case *sqlparser.UseDB:
+		return c.handleUseDB(v.DB)
+	case *sqlparser.SimpleSelect:
+		return c.handleSimpleSelect(v)
+	case *sqlparser.Truncate:
+		return c.handleExec(stmt, nil)
+	default:
+		return fmt.Errorf("statement %T not support now", stmt)
+	}
     //
 	return nil
 }
