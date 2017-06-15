@@ -7,7 +7,7 @@
 首选，对kingshard进行性能优化，我们必须要找到kingshard的性能瓶颈在哪里。Go语言在性能优化支持方面做的非常好，借助于go语言的pprof工具，我们可以通过简单的几个步骤，就能得到kingshard在转发SQL请求时的各个函数耗时情况。
 
 ### 1.1 环境搭建
-根据[kingshard使用指南](https://github.com/flike/kingshard/blob/master/doc/KingDoc/how_to_use_kingshard.md)搭建一个kingshard代理环境。我是用macbook搭建的环境，硬件参数如下所示：
+根据[kingshard使用指南](https://github.com/qiwenilli/kingshard/blob/master/doc/KingDoc/how_to_use_kingshard.md)搭建一个kingshard代理环境。我是用macbook搭建的环境，硬件参数如下所示：
 
 ```
 CPU： 2.2GHZ * 4
@@ -26,7 +26,7 @@ go get github.com/pkg/profile
 
 2.在工程内import这个组件
 
-3.在kingshard/cmd/kingshard/main.go的main函数开始部分添加CPU监控的启动和停止入口
+3.在kingshard/cmd/qiwenilli/kingshard/main.go的main函数开始部分添加CPU监控的启动和停止入口
 
 ```
 func main() {
@@ -40,7 +40,7 @@ func main() {
 4.重新编译工程, 运行kingshard
 
 ```
-./bin/kingshard -config=etc/ks.yaml
+./bin/qiwenilli/kingshard -config=etc/ks.yaml
 ```
 
 5.kingshard启动后会在终端输出下面一段提示：
@@ -90,11 +90,11 @@ Threads fairness:
 - 按照上述步骤，直连MySQL。测试直连MySQL的QPS，同样测试三次QPS（27730.90，28499.05，27119.20），得到直连MySQL的QPS是：27783.05。
 - 从上述数据可以计算出kingshard转发SQL的性能是直连MySQL的59%左右。
 
-7.将cpu.prof拷贝到bin/kingshard所在位置
+7.将cpu.prof拷贝到bin/qiwenilli/kingshard所在位置
 
 8.调用go tool工具制作CPU耗时的PDF文档
 ```
-go tool pprof -pdf ./kingshard cpu.pprof > report.pdf
+go tool pprof -pdf ./qiwenilli/kingshard cpu.pprof > report.pdf
 ```
 
 ## 2. 性能测试报告分析
@@ -111,7 +111,7 @@ func (c *TCPConn) SetNoDelay(noDelay bool) error
 
 ## 2.1 代码修改和性能测试
 
-发现了性能瓶颈以后，修改proxy/server/server.go文件中的newClientConn函数和backend/backend_conn.go中的ReConnect函数，分别设置client与kingshard之间的连接和kingshard到MySQL之间的连接为最小化传输延时。具体的代码修改可以查看这个[commit](https://github.com/flike/kingshard/commit/6c175d127c7b15b527cedb02876634901f2b9be1)。
+发现了性能瓶颈以后，修改proxy/server/server.go文件中的newClientConn函数和backend/backend_conn.go中的ReConnect函数，分别设置client与kingshard之间的连接和kingshard到MySQL之间的连接为最小化传输延时。具体的代码修改可以查看这个[commit](https://github.com/qiwenilli/kingshard/commit/6c175d127c7b15b527cedb02876634901f2b9be1)。
 
 修改后我们利用sysbench重新测试，测试命令和上述测试一致。得到的结果如下所示：
 

@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/flike/kingshard/mysql"
+	"github.com/qiwenilli/kingshard/mysql"
 )
 
 type Stmt struct {

@@ -21,13 +21,16 @@ import (
 	"sync"
 	"time"
 
-	"github.com/flike/kingshard/backend"
-	"github.com/flike/kingshard/core/errors"
-	"github.com/flike/kingshard/core/golog"
-	"github.com/flike/kingshard/core/hack"
-	"github.com/flike/kingshard/mysql"
-	"github.com/flike/kingshard/proxy/router"
-	"github.com/flike/kingshard/sqlparser"
+	"github.com/qiwenilli/kingshard/backend"
+	"github.com/qiwenilli/kingshard/core/errors"
+	"github.com/qiwenilli/kingshard/core/golog"
+	"github.com/qiwenilli/kingshard/core/hack"
+	"github.com/qiwenilli/kingshard/mysql"
+	"github.com/qiwenilli/kingshard/proxy/router"
+	"github.com/qiwenilli/kingshard/sqlparser"
+
+    // "github.com/youtube/vitess/go/vt/sqlparser"
+    "github.com/qiwenilli/ydySqlParser"
 )
 
 /*处理query语句*/
@@ -49,7 +52,11 @@ func (c *ClientConn) handleQuery(sql string) (err error) {
 		}
 	}()
 
+    //
 	sql = strings.TrimRight(sql, ";") //删除sql语句最后的分号
+    //
+    sql = ydySqlParser.BuildNewSql(sql)
+    //
 	hasHandled, err := c.preHandleShard(sql)
 	if err != nil {
 		golog.Error("server", "preHandleShard", err.Error(), 0,
@@ -62,46 +69,48 @@ func (c *ClientConn) handleQuery(sql string) (err error) {
 		return nil
 	}
 
-	var stmt sqlparser.Statement
-	stmt, err = sqlparser.Parse(sql) //解析sql语句,得到的stmt是一个interface
-	if err != nil {
-		golog.Error("server", "parse", err.Error(), 0, "hasHandled", hasHandled, "sql", sql)
-		return err
-	}
-
-	switch v := stmt.(type) {
-	case *sqlparser.Select:
-		return c.handleSelect(v, nil)
-	case *sqlparser.Insert:
-		return c.handleExec(stmt, nil)
-	case *sqlparser.Update:
-		return c.handleExec(stmt, nil)
-	case *sqlparser.Delete:
-		return c.handleExec(stmt, nil)
-	case *sqlparser.Replace:
-		return c.handleExec(stmt, nil)
-	case *sqlparser.Set:
-		return c.handleSet(v, sql)
-	case *sqlparser.Begin:
-		return c.handleBegin()
-	case *sqlparser.Commit:
-		return c.handleCommit()
-	case *sqlparser.Rollback:
-		return c.handleRollback()
-	case *sqlparser.Admin:
-		return c.handleAdmin(v)
-	case *sqlparser.AdminHelp:
-		return c.handleAdminHelp(v)
-	case *sqlparser.UseDB:
-		return c.handleUseDB(v.DB)
-	case *sqlparser.SimpleSelect:
-		return c.handleSimpleSelect(v)
-	case *sqlparser.Truncate:
-		return c.handleExec(stmt, nil)
-	default:
-		return fmt.Errorf("statement %T not support now", stmt)
-	}
-
+	// var stmt sqlparser.Statement
+	// stmt, err = sqlparser.Parse(sql) //解析sql语句,得到的stmt是一个interface
+	// if err != nil {
+	// 	golog.Error("server", "parse", err.Error(), 0, "hasHandled", hasHandled, "sql", sql)
+	// 	return err
+	// }
+    //
+    // fmt.Println(stmt)
+    //
+	// switch v := stmt.(type) {
+	// case *sqlparser.Select:
+	// 	return c.handleSelect(v, nil)
+	// case *sqlparser.Insert:
+	// 	return c.handleExec(stmt, nil)
+	// case *sqlparser.Update:
+	// 	return c.handleExec(stmt, nil)
+	// case *sqlparser.Delete:
+	// 	return c.handleExec(stmt, nil)
+	// case *sqlparser.Replace:
+	// 	return c.handleExec(stmt, nil)
+	// case *sqlparser.Set:
+	// 	return c.handleSet(v, sql)
+	// case *sqlparser.Begin:
+	// 	return c.handleBegin()
+	// case *sqlparser.Commit:
+	// 	return c.handleCommit()
+	// case *sqlparser.Rollback:
+	// 	return c.handleRollback()
+	// case *sqlparser.Admin:
+	// 	return c.handleAdmin(v)
+	// case *sqlparser.AdminHelp:
+	// 	return c.handleAdminHelp(v)
+	// case *sqlparser.UseDB:
+	// 	return c.handleUseDB(v.DB)
+	// case *sqlparser.SimpleSelect:
+	// 	return c.handleSimpleSelect(v)
+	// case *sqlparser.Truncate:
+	// 	return c.handleExec(stmt, nil)
+	// default:
+	// 	return fmt.Errorf("statement %T not support now", stmt)
+	// }
+    //
 	return nil
 }
 
@@ -330,6 +339,7 @@ func (c *ClientConn) newEmptyResultset(stmt *sqlparser.Select) *mysql.Resultset 
 		case *sqlparser.StarExpr:
 			r.Fields[i].Name = []byte("*")
 		case *sqlparser.NonStarExpr:
+            fmt.Println(nstring(e),">>>>>>")
 			if e.As != nil {
 				r.Fields[i].Name = e.As
 				r.Fields[i].OrgName = hack.Slice(nstring(e.Expr))

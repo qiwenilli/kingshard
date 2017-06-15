@@ -24,16 +24,16 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/flike/kingshard/config"
-	"github.com/flike/kingshard/core/golog"
-	"github.com/flike/kingshard/core/hack"
-	"github.com/flike/kingshard/proxy/server"
-	"github.com/flike/kingshard/web"
+	"github.com/qiwenilli/kingshard/config"
+	"github.com/qiwenilli/kingshard/core/golog"
+	"github.com/qiwenilli/kingshard/core/hack"
+	"github.com/qiwenilli/kingshard/proxy/server"
+	"github.com/qiwenilli/kingshard/web"
 )
 
 var configFile *string = flag.String("config", "/etc/ks.yaml", "kingshard config file")
 var logLevel *string = flag.String("log-level", "", "log level [debug|info|warn|error], default error")
-var version *bool = flag.Bool("v", false, "the version of kingshard")
+//var version *bool = flag.Bool("v", false, "the version of kingshard")
 
 const (
 	sqlLogName = "sql.log"
@@ -42,6 +42,7 @@ const (
 )
 
 const banner string = `
+    房互网，qiwen<34214399@qq.com>
     __   _                  __                   __
    / /__(_)___  ____ ______/ /_  ____ __________/ /
   / //_/ / __ \/ __ \/ ___/ __ \ / __\/ ___/ __  /
@@ -56,9 +57,9 @@ func main() {
 	flag.Parse()
 	fmt.Printf("Git commit:%s\n", hack.Version)
 	fmt.Printf("Build time:%s\n", hack.Compile)
-	if *version {
-		return
-	}
+	// if *version {
+	// 	return
+	// }
 	if len(*configFile) == 0 {
 		fmt.Println("must use a config file")
 		return

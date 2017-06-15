@@ -1,4 +1,4 @@
-[![Author](https://img.shields.io/badge/author-@flike-blue.svg?style=flat)](http://weibo.com/chenfei001) [![Build Status](https://travis-ci.org/flike/kingshard.svg?branch=master)](https://travis-ci.org/flike/kingshard) [![Foundation](https://img.shields.io/badge/Golang-Foundation-green.svg)](http://golangfoundation.org)
+[![Author](https://img.shields.io/badge/author-@flike-blue.svg?style=flat)](http://weibo.com/chenfei001) [![Build Status](https://travis-ci.org/qiwenilli/kingshard.svg?branch=master)](https://travis-ci.org/kingshard) [![Foundation](https://img.shields.io/badge/Golang-Foundation-green.svg)](http://golangfoundation.org)
 
 # kingshard简介 [支持kingshard](./doc/KingDoc/support.md)
 
@@ -39,25 +39,25 @@ kingshard是一个由Go开发高性能MySQL Proxy项目，kingshard在满足基�
 
 ### kingshard安装和使用
 
-[1.安装kingshard](./doc/KingDoc/kingshard_install_document.md)
+[1.安装kingshard](./doc/KingDoc/qiwenilli/kingshard_install_document.md)
 
 [2.如何利用一个数据库中间件扩展MySQL集群——kingshard使用指南](./doc/KingDoc/how_to_use_kingshard.md)
 
-[3.kingshard sharding介绍](./doc/KingDoc/kingshard_sharding_introduce.md)
+[3.kingshard sharding介绍](./doc/KingDoc/qiwenilli/kingshard_sharding_introduce.md)
 
-[4.kingshard按时间分表功能介绍](./doc/KingDoc/kingshard_date_sharding.md)
+[4.kingshard按时间分表功能介绍](./doc/KingDoc/qiwenilli/kingshard_date_sharding.md)
 
-[5.kingshard 快速入门](./doc/KingDoc/kingshard_quick_try.md)
+[5.kingshard 快速入门](./doc/KingDoc/qiwenilli/kingshard_quick_try.md)
 
 [6.管理端命令介绍](./doc/KingDoc/admin_command_introduce.md)
 
-[7.管理端Web API接口介绍](./doc/KingDoc/kingshard_admin_api.md)
+[7.管理端Web API接口介绍](./doc/KingDoc/qiwenilli/kingshard_admin_api.md)
 
 [8.kingshard SQL黑名单功能介绍](./doc/KingDoc/sql_blacklist_introduce.md)
 
 [9.kingshard的FAQ](./doc/KingDoc/function_FAQ.md)
 
-[10.kingshard SQL支持范围](./doc/KingDoc/kingshard_support_sql.md)
+[10.kingshard SQL支持范围](./doc/KingDoc/qiwenilli/kingshard_support_sql.md)
 
 [11.如何配合LVS实现集群部署](./doc/KingDoc/how_to_use_lvs.md)
 
@@ -65,17 +65,17 @@ kingshard是一个由Go开发高性能MySQL Proxy项目，kingshard在满足基�
 
 [1.kingshard架构设计和功能实现](./doc/KingDoc/architecture_of_kingshard_CN.md)
 
-[2.kingshard性能优化之网络篇](./doc/KingDoc/kingshard_performance_profiling.md)
+[2.kingshard性能优化之网络篇](./doc/KingDoc/qiwenilli/kingshard_performance_profiling.md)
 
-[3.kingshard性能测试报告](./doc/KingDoc/kingshard_performance_test.md)
+[3.kingshard性能测试报告](./doc/KingDoc/qiwenilli/kingshard_performance_test.md)
 ## 鸣谢
 - 感谢[mixer](https://github.com/siddontang/mixer)作者siddontang, kingshard最初的版本正是基于mixer开发而来的。
 - 感谢[bigpyer](https://github.com/bigpyer)，他对kingshard做了详细的性能测试，并撰写了一份非常详细的测试报告。
-- 感谢以下[开源爱好者](https://github.com/flike/kingshard/graphs/contributors)为kingshard做出的贡献。
+- 感谢以下[开源爱好者](https://github.com/qiwenilli/kingshard/graphs/contributors)为kingshard做出的贡献。
 
 ## kingshard用户列表
 
-https://github.com/flike/kingshard/issues/148
+https://github.com/qiwenilli/kingshard/issues/148
 
 ## 反馈
 kingshard开源以来，经过不断地迭代开发，功能较为完善，稳定性有较大提升。 **目前已有上二十家公司在生产环境使用kingshard作为MySQL代理。** 如果您在使用kingshard的过程中发现BUG或者有新的功能需求，非常欢迎您发邮件至hiflike#gmail.com与作者取得联系，或者加入QQ群(147926796)交流。

@@ -18,9 +18,9 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/flike/kingshard/core/errors"
-	"github.com/flike/kingshard/core/hack"
-	"github.com/flike/kingshard/mysql"
+	"github.com/qiwenilli/kingshard/core/errors"
+	"github.com/qiwenilli/kingshard/core/hack"
+	"github.com/qiwenilli/kingshard/mysql"
 	"github.com/qiwenilli/ydyImportant"
 )
 
@@ -118,6 +118,9 @@ func (c *ClientConn) buildResultset(fields []*mysql.Field, names []string, value
 				if ExistFields {
 					r.Fields[j] = fields[j]
 					r.FieldNames[string(r.Fields[j].Name)] = j
+
+					fmt.Println("...", j)
+
 				} else {
 					field := &mysql.Field{}
 					r.Fields[j] = field
@@ -126,6 +129,9 @@ func (c *ClientConn) buildResultset(fields []*mysql.Field, names []string, value
 					if err = formatField(field, value); err != nil {
 						return nil, err
 					}
+
+					//
+					fmt.Println(j)
 				}
 
 			}
@@ -160,6 +166,7 @@ func (c *ClientConn) writeResultset(status uint16, r *mysql.Resultset) error {
 	}
 
 	for _, v := range r.Fields {
+		//
 		data = data[0:4]
 		data = append(data, v.Dump()...)
 		total, err = c.writePacketBatch(total, data, false)
@@ -174,15 +181,107 @@ func (c *ClientConn) writeResultset(status uint16, r *mysql.Resultset) error {
 	}
 
 	for _, v := range r.RowDatas {
-		_rowData, _ := v.ParseText(r.Fields)
 
+		//custome start
 		//开始过滤数据表中，敏感数据
 		//手机号、姓名、身份证、银行卡号
+		_rowData, _ := v.ParseText(r.Fields)
+
+		var row []byte
+
+		var b []byte
+		var err error
+
 		for i, f := range r.Fields {
+
+			//----------------------------------------------------------------------------
+			if t := func(str string) bool {
+				fieldList := []string{
+					"mobile",
+					"u_mobile",
+					"b_mobile",
+					"bu_mobile",
+					"link_mobile",
+					"link2_mobile",
+					"emergency_mobile",
+					"link2_mate_mobile",
+					"customer_verification",
+				}
+				for _, _f := range fieldList {
+					if str == _f {
+						return true
+					}
+				}
+				return false
+
+			}(string(f.Name)); t {
+				// fmt.Printf("%s.%s 过滤手机号 %s \n", string(f.Table), string(f.Name), ydyimportant.ToString(_rowData[i]))
+				b, _ = formatValue(_rowData[i])
+				b = []byte(ydyimportant.Mobile(string(b)))
+				row = append(row, mysql.PutLengthEncodedString(b)...)
+
+				continue
+			}
+
+			if t := func(str string) bool {
+				fieldList := []string{
+					//
+					"bank_card_one",
+					"bank_card_two",
+					"bank_card",
+					"b_bank_card",
+				}
+				for _, _f := range fieldList {
+					if str == _f {
+						return true
+					}
+				}
+				return false
+
+			}(string(f.Name)); t {
+				//fmt.Printf("%s.%s 身份证 %s \n", string(f.Table), string(f.Name), _rowData[i])
+				//
+				b, _ = formatValue(_rowData[i])
+				b = []byte(ydyimportant.IdCard(string(b)))
+				row = append(row, mysql.PutLengthEncodedString(b)...)
+
+				continue
+			}
+
+			if t := func(str string) bool {
+				fieldList := []string{
+					//
+					"bank_card_one",
+					"bank_card_two",
+					"bank_card",
+					"b_bank_card",
+				}
+				for _, _f := range fieldList {
+					if str == _f {
+						return true
+					}
+				}
+				return false
+
+			}(string(f.Name)); t {
+				//fmt.Printf("%s.%s 银行卡 %s \n", string(f.Table), string(f.Name), _rowData[i])
+				//
+				b, _ = formatValue(_rowData[i])
+				b = []byte(ydyimportant.BankCard(string(b)))
+				row = append(row, mysql.PutLengthEncodedString(b)...)
+
+				continue
+			}
+			//----------------------------------------------------------------------------
+
+			//
+			b, _ = formatValue(_rowData[i])
+			row = append(row, mysql.PutLengthEncodedString(b)...)
 		}
+		//custome end
 
 		data = data[0:4]
-		data = append(data, v...)
+		data = append(data, row...)
 		total, err = c.writePacketBatch(total, data, false)
 		if err != nil {
 			return err

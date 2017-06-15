@@ -21,7 +21,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/flike/kingshard/core/errors"
+	"github.com/qiwenilli/kingshard/core/errors"
 )
 
 const (

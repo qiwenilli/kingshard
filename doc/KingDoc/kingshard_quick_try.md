@@ -66,7 +66,7 @@
 
 ##安装Kingshard
 
-参考[kingshard install](https://github.com/doumadou/kingshard/blob/master/doc/KingDoc/kingshard_install_document.md)
+参考[kingshard install](https://github.com/doumadou/qiwenilli/kingshard/blob/master/doc/KingDoc/kingshard_install_document.md)
 
 ##配置Kingshard
 
@@ -178,7 +178,7 @@
 
 ##启动Kingshard
 
-    # ./bin/kingshard -config=etc/ks.yaml
+    # ./bin/qiwenilli/kingshard -config=etc/ks.yaml
 
 ##测试shard功能
 

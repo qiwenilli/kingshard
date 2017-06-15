@@ -1,12 +1,12 @@
 # server listen addr
-addr : 0.0.0.0:3307
+addr : 0.0.0.0:3306
 
 # server user and password
 user : fh 
 password : fh 
 
 #配置这个，上面用户名密码配置不在生效
-userconfig_path : /Users/qiwen/gopro/src/github.com/flike/kingshard/etc/ul.yaml
+userconfig_path : /home/qiwen/gopro/src/github.com/qiwenilli/kingshard/etc/ul.yaml
 
 # the web api server
 web_addr : 0.0.0.0:9797
@@ -47,82 +47,82 @@ nodes :
     max_conns_limit : 32
 
     # all mysql in a node must have the same user and password
-    user :  root 
-    password : 111111 
+    user :  fh 
+    password : fh 
 
     # master represents a real mysql master server 
-    master : 127.0.0.1:3306
+    master : 192.168.100.114:3306
 
     # slave represents a real mysql salve server,and the number after '@' is 
     # read load weight of this slave.
     #slave : 192.168.59.101:3307@2,192.168.59.101:3307@3
     down_after_noalive : 32
-- 
-    name : node2 
-
-    # default max conns for mysql server
-    max_conns_limit : 32
-
-    # all mysql in a node must have the same user and password
-    user :  root 
-    password : 111111
-
-    # master represents a real mysql master server 
-    master : 127.0.0.1:3306
-
-    # slave represents a real mysql salve server 
-    slave : 
-
-    # down mysql after N seconds noalive
-    # 0 will no down
-    down_after_noalive: 32
+        #- 
+        #    name : node2 
+        #
+        #    # default max conns for mysql server
+        #    max_conns_limit : 10
+        #
+        #    # all mysql in a node must have the same user and password
+        #    user :  fh 
+        #    password : fh 
+        #
+        #    # master represents a real mysql master server 
+        #    master : 192.168.100.114:3306
+        #
+        #    # slave represents a real mysql salve server 
+        #    slave : 
+        #
+        #    # down mysql after N seconds noalive
+        #    # 0 will no down
+        #    down_after_noalive: 5
 
 # schema defines sharding rules, the db is the sharding table database.
 schema :
-    nodes: [node1,node2]
+    nodes: [node1]
     default: node1      
     shard:
-    -   
-        db : kingshard
-        table: test_shard_hash
-        key: id
-        nodes: [node1, node2]
-        type: hash
-        locations: [4,4]
+        #-   
+        #    db : kingshard
+        #    table: test_shard_hash
+        #    key: id
+        #    nodes: [node1, node2]
+        #    type: hash
+        #    locations: [4,4]
 
-    - 
-        db : hidb
-        table: test_hash
-        key: id
-        nodes: [node1, node2]
-        type: hash
-        locations: [4,4]
-    -   
-        db : kingshard
-        table: test_shard_range
-        key: id
-        type: range
-        nodes: [node1, node2]
-        locations: [4,4]
-        table_row_limit: 10000
-    -
-        db : kingshard
-        table: test_shard_time
-        key: id
-        nodes: [node1, node2]
-        type: hash
-        locations: [2,2]
-    -
-        db : kingshard
-        table: test_shard_month
-        key: dtime
-        type: date_month
-        nodes: [node1,node2]
-        date_range: [201603-201605,201609-201612]
-    -
-        db : kingshard
-        table: test_shard_day
-        key: mtime
-        type: date_day
-        nodes: [node1,node2]
-        date_range: [20160306-20160307,20160308-20160309]
+        #- 
+        #    db : hidb
+        #    table: test_hash
+        #    key: id
+        #    nodes: [node1, node2]
+        #    type: hash
+        #    locations: [4,4]
+        #-   
+        #    db : kingshard
+        #    table: test_shard_range
+        #    key: id
+        #    type: range
+        #    nodes: [node1, node2]
+        #    locations: [4,4]
+        #    table_row_limit: 10000
+        #-
+        #    db : kingshard
+        #    table: test_shard_time
+        #    key: id
+        #    nodes: [node1, node2]
+        #    type: hash
+        #    locations: [2,2]
+        #-
+        #    db : kingshard
+        #    table: test_shard_month
+        #    key: dtime
+        #    type: date_month
+        #    nodes: [node1,node2]
+        #    date_range: [201603-201605,201609-201612]
+        #-
+        #    db : kingshard
+        #    table: test_shard_day
+        #    key: mtime
+        #    type: date_day
+        #    nodes: [node1,node2]
+        #    date_range: [20160306-20160307,20160308-20160309]

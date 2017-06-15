@@ -17,8 +17,8 @@ package server
 import (
 	"fmt"
 
-	"github.com/flike/kingshard/backend"
-	"github.com/flike/kingshard/mysql"
+	"github.com/qiwenilli/kingshard/backend"
+	"github.com/qiwenilli/kingshard/mysql"
 )
 
 func (c *ClientConn) handleUseDB(dbName string) error {

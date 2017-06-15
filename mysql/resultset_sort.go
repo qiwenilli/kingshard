@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/flike/kingshard/core/hack"
+	"github.com/qiwenilli/kingshard/core/hack"
 )
 
 const (
