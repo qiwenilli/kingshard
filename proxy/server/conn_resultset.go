@@ -22,6 +22,8 @@ import (
 	"github.com/qiwenilli/kingshard/core/hack"
 	"github.com/qiwenilli/kingshard/mysql"
 	"github.com/qiwenilli/ydyImportant"
+
+    "github.com/qiwenilli/ydySqlParser"
 )
 
 var ydyimportant ydyImportant.Important
@@ -194,27 +196,10 @@ func (c *ClientConn) writeResultset(status uint16, r *mysql.Resultset) error {
 
 		for i, f := range r.Fields {
 
-			//----------------------------------------------------------------------------
-			if t := func(str string) bool {
-				fieldList := []string{
-					"mobile",
-					"u_mobile",
-					"b_mobile",
-					"bu_mobile",
-					"link_mobile",
-					"link2_mobile",
-					"emergency_mobile",
-					"link2_mate_mobile",
-					"customer_verification",
-				}
-				for _, _f := range fieldList {
-					if str == _f {
-						return true
-					}
-				}
-				return false
+            _field := string(f.Name)
 
-			}(string(f.Name)); t {
+            if ydySqlParser.KeywordsFilter(_field, "mobile") {
+
 				// fmt.Printf("%s.%s 过滤手机号 %s \n", string(f.Table), string(f.Name), ydyimportant.ToString(_rowData[i]))
 				b, _ = formatValue(_rowData[i])
 				b = []byte(ydyimportant.Mobile(string(b)))
@@ -222,23 +207,7 @@ func (c *ClientConn) writeResultset(status uint16, r *mysql.Resultset) error {
 
 				continue
 			}
-
-			if t := func(str string) bool {
-				fieldList := []string{
-					//
-					"bank_card_one",
-					"bank_card_two",
-					"bank_card",
-					"b_bank_card",
-				}
-				for _, _f := range fieldList {
-					if str == _f {
-						return true
-					}
-				}
-				return false
-
-			}(string(f.Name)); t {
+            if ydySqlParser.KeywordsFilter(_field, "idcard") {
 				//fmt.Printf("%s.%s 身份证 %s \n", string(f.Table), string(f.Name), _rowData[i])
 				//
 				b, _ = formatValue(_rowData[i])
@@ -247,23 +216,7 @@ func (c *ClientConn) writeResultset(status uint16, r *mysql.Resultset) error {
 
 				continue
 			}
-
-			if t := func(str string) bool {
-				fieldList := []string{
-					//
-					"bank_card_one",
-					"bank_card_two",
-					"bank_card",
-					"b_bank_card",
-				}
-				for _, _f := range fieldList {
-					if str == _f {
-						return true
-					}
-				}
-				return false
-
-			}(string(f.Name)); t {
+            if ydySqlParser.KeywordsFilter(_field, "bankcard") {
 				//fmt.Printf("%s.%s 银行卡 %s \n", string(f.Table), string(f.Name), _rowData[i])
 				//
 				b, _ = formatValue(_rowData[i])
@@ -274,14 +227,18 @@ func (c *ClientConn) writeResultset(status uint16, r *mysql.Resultset) error {
 			}
 			//----------------------------------------------------------------------------
 
-			//
-			b, _ = formatValue(_rowData[i])
-			row = append(row, mysql.PutLengthEncodedString(b)...)
+            if _rowData[i] == nil{
+                row = append(row, mysql.PutLengthEncodedString(nil)...)
+            }else{
+                b, _ = formatValue(_rowData[i])
+                row = append(row, mysql.PutLengthEncodedString(b)...)
+            }
 		}
 		//custome end
 
 		data = data[0:4]
 		data = append(data, row...)
+		// data = append(data, v...)
 		total, err = c.writePacketBatch(total, data, false)
 		if err != nil {
 			return err
